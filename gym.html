@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitForge | Premium Fitness</title>
+  <!-- Tailwind + Google Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome 6 (free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* Premium custom styles */
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0a0a0a;
+      color: #ffffff;
+      scroll-behavior: smooth;
+    }
+    .font-display {
+      font-family: 'Oswald', sans-serif;
+      letter-spacing: 0.5px;
+    }
+    /* Glassmorphism effect */
+    .glass {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .glass-card {
+      background: rgba(20, 20, 20, 0.7);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 107, 53, 0.2);
+      transition: all 0.3s ease;
+    }
+    .glass-card:hover {
+      border-color: #FF6B35;
+      box-shadow: 0 20px 40px rgba(255, 107, 53, 0.2);
+      transform: translateY(-5px);
+    }
+    /* Gradient text */
+    .text-gradient {
+      background: linear-gradient(135deg, #FF6B35, #FFB347);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    /* Button styles */
+    .btn-premium {
+      background: linear-gradient(145deg, #FF6B35, #FF8C42);
+      box-shadow: 0 10px 20px rgba(255, 107, 53, 0.3);
+      transition: all 0.3s ease;
+    }
+    .btn-premium:hover {
+      transform: scale(1.05);
+      box-shadow: 0 20px 30px rgba(255, 107, 53, 0.5);
+    }
+    .btn-outline-premium {
+      border: 2px solid #FF6B35;
+      color: #FF6B35;
+      transition: all 0.3s ease;
+    }
+    .btn-outline-premium:hover {
+      background: #FF6B35;
+      color: #0a0a0a;
+    }
+    /* Animations */
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .animate-float {
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in-up {
+      animation: fadeInUp 0.8s ease forwards;
+    }
+    .stagger-1 { animation-delay: 0.1s; }
+    .stagger-2 { animation-delay: 0.2s; }
+    .stagger-3 { animation-delay: 0.3s; }
+    /* Schedule tabs */
+    .day-tab.active {
+      background: #FF6B35;
+      color: #ffffff;
+    }
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(5px);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal.show {
+      display: flex;
+    }
+    .modal-content {
+      background: #1a1a1a;
+      border-radius: 32px;
+      padding: 40px;
+      max-width: 400px;
+      width: 90%;
+      border: 1px solid #FF6B35;
+      box-shadow: 0 30px 60px rgba(255,107,53,0.3);
+    }
+    /* Floating WhatsApp */
+    .whatsapp-float {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #25D366;
+      color: white;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+      transition: transform 0.3s;
+      z-index: 100;
+    }
+    .whatsapp-float:hover {
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body class="antialiased">
+
+  <!-- Floating WhatsApp -->
+  <a href="https://wa.me/1234567890" class="whatsapp-float" target="_blank">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+
+  <!-- Booking Modal (simple form) -->
+  <div id="bookingModal" class="modal">
+    <div class="modal-content">
+      <h3 class="font-display text-3xl mb-4 text-gradient">Book a Class</h3>
+      <p class="text-gray-400 mb-6">Fill in your details and we'll confirm your spot.</p>
+      <form id="bookingForm">
+        <input type="text" placeholder="Your Name" class="w-full p-3 mb-4 rounded-lg bg-gray-800 border border-gray-700 text-white focus:border-[#FF6B35] outline-none">
+        <input type="email" placeholder="Email" class="w-full p-3 mb-4 rounded-lg bg-gray-800 border border-gray-700 text-white focus:border-[#FF6B35] outline-none">
+        <input type="tel" placeholder="Phone" class="w-full p-3 mb-4 rounded-lg bg-gray-800 border border-gray-700 text-white focus:border-[#FF6B35] outline-none">
+        <select class="w-full p-3 mb-4 rounded-lg bg-gray-800 border border-gray-700 text-white focus:border-[#FF6B35] outline-none">
+          <option>Select Class</option>
+          <option>HIIT Training</option>
+          <option>Strength & Tone</option>
+          <option>Yoga Flow</option>
+          <option>Spin Cycle</option>
+          <option>Boxing Fit</option>
+          <option>CrossFit</option>
+        </select>
+        <button type="submit" class="w-full btn-premium py-3 rounded-lg font-semibold">Confirm Booking</button>
+      </form>
+      <button onclick="closeModal()" class="mt-4 text-gray-400 hover:text-white transition"><i class="fas fa-times mr-2"></i>Close</button>
+    </div>
+  </div>
+
+  <!-- Navigation (premium glass) -->
+  <nav class="fixed top-0 left-0 right-0 z-50 px-6 py-4 glass">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-[#FF6B35] flex items-center justify-center">
+          <i class="fas fa-dumbbell text-white text-xl"></i>
+        </div>
+        <span class="font-display text-2xl tracking-wider text-white">FITFORGE</span>
+      </div>
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#about" class="text-gray-300 hover:text-[#FF6B35] transition text-sm font-medium">About</a>
+        <a href="#classes" class="text-gray-300 hover:text-[#FF6B35] transition text-sm font-medium">Classes</a>
+        <a href="#schedule" class="text-gray-300 hover:text-[#FF6B35] transition text-sm font-medium">Schedule</a>
+        <a href="#pricing" class="text-gray-300 hover:text-[#FF6B35] transition text-sm font-medium">Pricing</a>
+        <button onclick="openModal()" class="btn-premium px-6 py-2 rounded-full text-sm font-semibold text-white"><i class="fas fa-calendar-check mr-2"></i>Book Now</button>
+      </div>
+      <button id="mobile-menu-btn" class="md:hidden text-white text-2xl"><i class="fas fa-bars"></i></button>
+    </div>
+    <!-- Mobile menu (hidden) -->
+    <div id="mobile-menu" class="hidden md:hidden mt-4 flex flex-col gap-4 p-4 glass rounded-xl">
+      <a href="#about" class="text-gray-300 hover:text-[#FF6B35]">About</a>
+      <a href="#classes" class="text-gray-300 hover:text-[#FF6B35]">Classes</a>
+      <a href="#schedule" class="text-gray-300 hover:text-[#FF6B35]">Schedule</a>
+      <a href="#pricing" class="text-gray-300 hover:text-[#FF6B35]">Pricing</a>
+      <button onclick="openModal()" class="btn-premium px-4 py-2 rounded-full text-sm">Book Now</button>
+    </div>
+  </nav>
+
+  <!-- Hero Section (premium) -->
+  <section class="relative min-h-screen flex items-center pt-20 overflow-hidden">
+    <!-- Animated background -->
+    <div class="absolute inset-0 opacity-30">
+      <div class="absolute top-20 left-10 w-64 h-64 rounded-full bg-[#FF6B35] filter blur-3xl animate-float"></div>
+      <div class="absolute bottom-20 right-10 w-80 h-80 rounded-full bg-[#FFB347] filter blur-3xl animate-float" style="animation-delay: 1s;"></div>
+    </div>
+    <div class="max-w-7xl mx-auto px-6 relative z-10">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="space-y-8">
+          <span class="inline-block px-4 py-2 rounded-full text-xs font-semibold tracking-wider bg-[#FF6B35]/20 text-[#FF6B35] border border-[#FF6B35]/40"><i class="fas fa-fire mr-2"></i>LIMITED OFFER: 50% OFF FIRST MONTH</span>
+          <h1 id="hero-title" class="font-display text-6xl md:text-7xl lg:text-8xl leading-none">
+            <span class="text-white">TRANSFORM</span><br>
+            <span class="text-gradient">YOUR BODY</span>
+          </h1>
+          <p id="hero-subtitle" class="text-lg md:text-xl text-gray-400 max-w-md">Join the elite fitness community. State-of-the-art equipment, world-class trainers, and results that speak for themselves.</p>
+          <div class="flex flex-wrap gap-4">
+            <button onclick="openModal()" class="btn-premium px-8 py-4 rounded-full font-semibold text-lg flex items-center gap-2 text-white"><i class="fas fa-bolt"></i> Start Your Journey <i class="fas fa-arrow-right"></i></button>
+            <a href="#classes" class="btn-outline-premium px-8 py-4 rounded-full font-semibold text-lg">Explore Classes</a>
+          </div>
+        </div>
+        <div class="relative hidden lg:block">
+          <div class="relative w-full max-w-md mx-auto">
+            <!-- Premium illustration with floating elements -->
+            <div class="aspect-square rounded-full bg-gradient-to-br from-[#FF6B35] to-[#FFB347] p-1 animate-float">
+              <div class="w-full h-full rounded-full bg-[#0a0a0a] flex items-center justify-center">
+                <i class="fas fa-dumbbell text-8xl text-[#FF6B35]"></i>
+              </div>
+            </div>
+            <!-- Floating stats -->
+            <div class="absolute -top-4 -right-4 glass-card p-4 rounded-2xl">
+              <p class="font-display text-2xl text-gradient">10K+</p>
+              <p class="text-xs text-gray-400">Active Members</p>
+            </div>
+            <div class="absolute -bottom-4 -left-4 glass-card p-4 rounded-2xl">
+              <p class="font-display text-2xl text-gradient">24/7</p>
+              <p class="text-xs text-gray-400">Always Open</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Stats row (premium cards) -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16">
+        <div class="glass-card p-6 rounded-2xl text-center">
+          <div class="font-display text-4xl text-gradient">10K+</div>
+          <div class="text-sm text-gray-400">Active Members</div>
+        </div>
+        <div class="glass-card p-6 rounded-2xl text-center">
+          <div class="font-display text-4xl text-gradient">50+</div>
+          <div class="text-sm text-gray-400">Expert Trainers</div>
+        </div>
+        <div class="glass-card p-6 rounded-2xl text-center">
+          <div class="font-display text-4xl text-gradient">100+</div>
+          <div class="text-sm text-gray-400">Weekly Classes</div>
+        </div>
+        <div class="glass-card p-6 rounded-2xl text-center">
+          <div class="font-display text-4xl text-gradient">24/7</div>
+          <div class="text-sm text-gray-400">Always Open</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section (premium) -->
+  <section id="about" class="py-24 bg-[#0f0f0f]">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+        <div>
+          <span class="text-sm font-semibold tracking-wider text-[#FF6B35] uppercase"><i class="fas fa-info-circle mr-2"></i>Why choose us</span>
+          <h2 id="about-title" class="font-display text-5xl md:text-6xl mt-4 mb-6 text-white">MORE THAN JUST A GYM</h2>
+          <p id="about-description" class="text-lg text-gray-400 leading-relaxed mb-8">FitForge is where passion meets performance. Our cutting-edge facility combines premium equipment, innovative training methods, and a supportive community to help you achieve extraordinary results.</p>
+          <div class="space-y-6">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-xl bg-[#FF6B35]/20 flex items-center justify-center text-[#FF6B35] text-xl"><i class="fas fa-check-circle"></i></div>
+              <div>
+                <h3 class="font-semibold text-lg text-white">Personalized Programs</h3>
+                <p class="text-gray-400">Custom workout plans designed for your specific goals and fitness level.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-xl bg-[#FF6B35]/20 flex items-center justify-center text-[#FF6B35] text-xl"><i class="fas fa-bolt"></i></div>
+              <div>
+                <h3 class="font-semibold text-lg text-white">High-Intensity Training</h3>
+                <p class="text-gray-400">Burn more calories and build strength with our signature HIIT classes.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-xl bg-[#FF6B35]/20 flex items-center justify-center text-[#FF6B35] text-xl"><i class="fas fa-users"></i></div>
+              <div>
+                <h3 class="font-semibold text-lg text-white">Supportive Community</h3>
+                <p class="text-gray-400">Join a tribe of motivated individuals who push each other to greatness.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="relative">
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-4">
+              <div class="glass-card h-48 rounded-2xl flex items-center justify-center">
+                <i class="fas fa-heartbeat text-6xl text-[#FF6B35] opacity-50"></i>
+              </div>
+              <div class="glass-card h-64 rounded-2xl flex items-center justify-center bg-gradient-to-br from-[#FF6B35] to-[#FFB347]">
+                <div class="text-center">
+                  <div class="font-display text-6xl text-white">95%</div>
+                  <div class="text-sm text-white/80">Member Satisfaction</div>
+                </div>
+              </div>
+            </div>
+            <div class="space-y-4 pt-8">
+              <div class="glass-card h-64 rounded-2xl flex items-center justify-center">
+                <i class="fas fa-dumbbell text-6xl text-[#FF6B35] opacity-50"></i>
+              </div>
+              <div class="glass-card h-48 rounded-2xl flex items-center justify-center">
+                <i class="fas fa-star text-6xl text-[#FF6B35] opacity-50"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Classes Section (premium cards) -->
+  <section id="classes" class="py-24 bg-[#0a0a0a]">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <span class="text-sm font-semibold tracking-wider text-[#FF6B35] uppercase"><i class="fas fa-dumbbell mr-2"></i>what we offer</span>
+        <h2 id="classes-title" class="font-display text-5xl md:text-6xl mt-4 text-white">OUR CLASSES</h2>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Class Card 1 -->
+        <div class="glass-card rounded-2xl p-6 card-hover">
+          <div class="w-14 h-14 rounded-xl bg-[#FF6B35]/20 flex items-center justify-center mb-6 text-2xl text-[#FF6B35]"><i class="fas fa-bolt"></i></div>
+          <h3 class="font-display text-2xl mb-3 text-white">HIIT TRAINING</h3>
+          <p class="text-gray-400 mb-6">High-intensity intervals to maximize calorie burn and boost metabolism.</p>
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-[#FF6B35]"><i class="far fa-clock mr-1"></i>45 min • All Levels</span>
+            <button onclick="openModal()" class="w-10 h-10 rounded-full bg-[#FF6B35]/20 flex items-center justify-center text-[#FF6B35] hover:bg-[#FF6B35] hover:text-white transition"><i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+        <!-- Class Card 2 -->
+        <div class="glass-card rounded-2xl p-6">
+          <div class="w-14 h-14 rounded-xl bg-[#FF6B35]/20 flex items-center justify-center mb-6 text-2xl text-[#FF6B35]"><i class="fas fa-fire"></i></div>
+          <h3 class="font-display text-2xl mb-3 text-white">STRENGTH & TONE</h3>
+          <p class="text-gray-400 mb-6">Build lean muscle and sculpt your body with targeted resistance training.</p>
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-[#FF6B35]"><i class="far fa-clock mr-1"></i>60 min • Intermediate</span>
+            <button onclick="openModal()" class="w-10 h-10 rounded-full bg-[#FF6B35]/20 flex items-center justify-center text-[#FF6B35] hover:bg-[#FF6B35] hover:text-white transition"><i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+        <!-- Class Card 3 -->
+        <div class="glass-card rounded-2xl p-6">
+          <div class="w-14 h-14 rounded-xl bg-[#FF6B35]/20 flex items-center justify-center mb-6 text-2xl text-[#FF6B35]"><i class="fas fa-spa"></i></div>
+          <h3 class="font-display text-2xl mb-3 text-white">YOGA FLOW</h3>
+          <p class="text-gray-400 mb-6">Find balance and flexibility with mindful movement and breathwork.</p>
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-[#FF6B35]"><i class="far fa-clock mr-1"></i>75 min • All Levels</span>
+            <button onclick="openModal()" class="w-10 h-10 rounded-full bg-[#FF6B35]/20 flex items-center justify-center text-[#FF6B35] hover:bg-[#FF6B35] hover:text-white transition"><i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+        <!-- Class Card 4 -->
+        <div class="glass-card rounded-2xl p-6">
+          <div class="w-14 h-14 rounded-xl bg-[#FF6B35]/20 flex items-center justify-center mb-6 text-2xl text-[#FF6B35]"><i class="fas fa-bicycle"></i></div>
+          <h3 class="font-display text-2xl mb-3 text-white">SPIN CYCLE</h3>
+          <p class="text-gray-400 mb-6">High-energy cycling sessions with motivating music and dynamic routines.</p>
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-[#FF6B35]"><i class="far fa-clock mr-1"></i>50 min • All Levels</span>
+            <button onclick="openModal()" class="w-10 h-10 rounded-full bg-[#FF6B35]/20 flex items-center justify-center text-[#FF6B35] hover:bg-[#FF6B35] hover:text-white transition"><i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+        <!-- Class Card 5 -->
+        <div class="glass-card rounded-2xl p-6">
+          <div class="w-14 h-14 rounded-xl bg-[#FF6B35]/20 flex items-center justify-center mb-6 text-2xl text-[#FF6B35]"><i class="fas fa-fist-raised"></i></div>
+          <h3 class="font-display text-2xl mb-3 text-white">BOXING FIT</h3>
+          <p class="text-gray-400 mb-6">Learn boxing techniques while getting an incredible full-body workout.</p>
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-[#FF6B35]"><i class="far fa-clock mr-1"></i>55 min • Intermediate</span>
+            <button onclick="openModal()" class="w-10 h-10 rounded-full bg-[#FF6B35]/20 flex items-center justify-center text-[#FF6B35] hover:bg-[#FF6B35] hover:text-white transition"><i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+        <!-- Class Card 6 -->
+        <div class="glass-card rounded-2xl p-6">
+          <div class="w-14 h-14 rounded-xl bg-[#FF6B35]/20 flex items-center justify-center mb-6 text-2xl text-[#FF6B35]"><i class="fas fa-mountain"></i></div>
+          <h3 class="font-display text-2xl mb-3 text-white">CROSSFIT</h3>
+          <p class="text-gray-400 mb-6">Functional fitness training that builds strength, endurance, and agility.</p>
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-[#FF6B35]"><i class="far fa-clock mr-1"></i>60 min • Advanced</span>
+            <button onclick="openModal()" class="w-10 h-10 rounded-full bg-[#FF6B35]/20 flex items-center justify-center text-[#FF6B35] hover:bg-[#FF6B35] hover:text-white transition"><i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Schedule Section (interactive tabs) -->
+  <section id="schedule" class="py-24 bg-[#0f0f0f]">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <span class="text-sm font-semibold tracking-wider text-[#FF6B35] uppercase"><i class="far fa-calendar-alt mr-2"></i>Weekly schedule</span>
+        <h2 id="schedule-title" class="font-display text-5xl md:text-6xl mt-4 text-white">CLASS SCHEDULE</h2>
+      </div>
+      <!-- Day tabs -->
+      <div class="flex flex-wrap gap-2 justify-center mb-8">
+        <button class="day-tab active px-6 py-3 rounded-full font-semibold transition" data-day="monday">Monday</button>
+        <button class="day-tab px-6 py-3 rounded-full font-semibold transition" data-day="tuesday">Tuesday</button>
+        <button class="day-tab px-6 py-3 rounded-full font-semibold transition" data-day="wednesday">Wednesday</button>
+        <button class="day-tab px-6 py-3 rounded-full font-semibold transition" data-day="thursday">Thursday</button>
+        <button class="day-tab px-6 py-3 rounded-full font-semibold transition" data-day="friday">Friday</button>
+        <button class="day-tab px-6 py-3 rounded-full font-semibold transition" data-day="saturday">Saturday</button>
+        <button class="day-tab px-6 py-3 rounded-full font-semibold transition" data-day="sunday">Sunday</button>
+      </div>
+      <!-- Schedule content (simplified for demo) -->
+      <div id="schedule-monday" class="schedule-day space-y-4 max-w-3xl mx-auto">
+        <div class="glass-card p-6 rounded-xl flex items-center gap-4">
+          <div class="text-center min-w-24">
+            <div class="font-display text-2xl text-[#FF6B35]">6:00 AM</div>
+            <div class="text-xs text-gray-400">45 min</div>
+          </div>
+          <div class="h-12 w-1 bg-[#FF6B35] rounded"></div>
+          <div class="flex-1">
+            <h4 class="font-semibold text-lg text-white">Morning HIIT</h4>
+            <p class="text-sm text-gray-400">with Sarah Johnson • Studio A</p>
+          </div>
+          <button onclick="openModal()" class="px-6 py-2 rounded-full bg-[#FF6B35]/20 text-[#FF6B35] hover:bg-[#FF6B35] hover:text-white transition font-semibold">Book</button>
+        </div>
+        <div class="glass-card p-6 rounded-xl flex items-center gap-4">
+          <div class="text-center min-w-24">
+            <div class="font-display text-2xl text-[#FF6B35]">9:00 AM</div>
+            <div class="text-xs text-gray-400">60 min</div>
+          </div>
+          <div class="h-12 w-1 bg-[#FF6B35] rounded"></div>
+          <div class="flex-1">
+            <h4 class="font-semibold text-lg text-white">Strength & Tone</h4>
+            <p class="text-sm text-gray-400">with Mike Rodriguez • Gym Floor</p>
+          </div>
+          <button onclick="openModal()" class="px-6 py-2 rounded-full bg-[#FF6B35]/20 text-[#FF6B35] hover:bg-[#FF6B35] hover:text-white transition font-semibold">Book</button>
+        </div>
+        <div class="glass-card p-6 rounded-xl flex items-center gap-4">
+          <div class="text-center min-w-24">
+            <div class="font-display text-2xl text-[#FF6B35]">12:00 PM</div>
+            <div class="text-xs text-gray-400">50 min</div>
+          </div>
+          <div class="h-12 w-1 bg-[#FF6B35] rounded"></div>
+          <div class="flex-1">
+            <h4 class="font-semibold text-lg text-white">Spin Cycle</h4>
+            <p class="text-sm text-gray-400">with Emma Chen • Cycling Studio</p>
+          </div>
+          <button onclick="openModal()" class="px-6 py-2 rounded-full bg-[#FF6B35]/20 text-[#FF6B35] hover:bg-[#FF6B35] hover:text-white transition font-semibold">Book</button>
+        </div>
+      </div>
+      <!-- Other days (hidden initially) -->
+      <div id="schedule-tuesday" class="schedule-day hidden space-y-4 max-w-3xl mx-auto">
+        <p class="text-center text-gray-400 py-12">Tuesday schedule: Similar to Monday, check app for details.</p>
+      </div>
+      <div id="schedule-wednesday" class="schedule-day hidden space-y-4 max-w-3xl mx-auto">
+        <p class="text-center text-gray-400 py-12">Wednesday schedule: Similar to Monday.</p>
+      </div>
+      <!-- ... (similar for other days) we can add more but keep concise -->
+    </div>
+  </section>
+
+  <!-- Pricing Section (premium cards) -->
+  <section id="pricing" class="py-24 bg-[#0a0a0a]">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <span class="text-sm font-semibold tracking-wider text-[#FF6B35] uppercase"><i class="fas fa-tag mr-2"></i>Membership plans</span>
+        <h2 class="font-display text-5xl md:text-6xl mt-4 text-white">CHOOSE YOUR PLAN</h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <!-- Basic -->
+        <div class="glass-card rounded-2xl p-8 text-center">
+          <h3 class="font-display text-3xl mb-2 text-white">BASIC</h3>
+          <p class="text-gray-400 mb-4">Perfect for getting started</p>
+          <div class="mb-6">
+            <span class="font-display text-5xl text-gradient">$29</span>
+            <span class="text-gray-400">/month</span>
+          </div>
+          <ul class="space-y-3 mb-8 text-left">
+            <li class="flex items-center gap-2"><i class="fas fa-check text-[#FF6B35]"></i><span class="text-gray-300">Access to gym floor</span></li>
+            <li class="flex items-center gap-2"><i class="fas fa-check text-[#FF6B35]"></i><span class="text-gray-300">2 group classes/week</span></li>
+            <li class="flex items-center gap-2"><i class="fas fa-check text-[#FF6B35]"></i><span class="text-gray-300">Locker room access</span></li>
+          </ul>
+          <button onclick="openModal()" class="w-full py-3 rounded-full btn-outline-premium font-semibold">Get Started</button>
+        </div>
+        <!-- Pro (highlighted) -->
+        <div class="glass-card rounded-2xl p-8 text-center relative transform scale-105 border-2 border-[#FF6B35]">
+          <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#FF6B35] text-white px-4 py-1 rounded-full text-xs font-semibold">MOST POPULAR</div>
+          <h3 class="font-display text-3xl mb-2 text-white">PRO</h3>
+          <p class="text-gray-400 mb-4">For serious fitness enthusiasts</p>
+          <div class="mb-6">
+            <span class="font-display text-5xl text-gradient">$59</span>
+            <span class="text-gray-400">/month</span>
+          </div>
+          <ul class="space-y-3 mb-8 text-left">
+            <li class="flex items-center gap-2"><i class="fas fa-check text-[#FF6B35]"></i><span class="text-gray-300">Unlimited gym access</span></li>
+            <li class="flex items-center gap-2"><i class="fas fa-check text-[#FF6B35]"></i><span class="text-gray-300">All group classes</span></li>
+            <li class="flex items-center gap-2"><i class="fas fa-check text-[#FF6B35]"></i><span class="text-gray-300">1 PT session/month</span></li>
+            <li class="flex items-center gap-2"><i class="fas fa-check text-[#FF6B35]"></i><span class="text-gray-300">Nutrition guidance</span></li>
+          </ul>
+          <button onclick="openModal()" class="w-full py-3 rounded-full btn-premium text-white font-semibold">Get Started</button>
+        </div>
+        <!-- Elite -->
+        <div class="glass-card rounded-2xl p-8 text-center">
+          <h3 class="font-display text-3xl mb-2 text-white">ELITE</h3>
+          <p class="text-gray-400 mb-4">The ultimate experience</p>
+          <div class="mb-6">
+            <span class="font-display text-5xl text-gradient">$99</span>
+            <span class="text-gray-400">/month</span>
+          </div>
+          <ul class="space-y-3 mb-8 text-left">
+            <li class="flex items-center gap-2"><i class="fas fa-check text-[#FF6B35]"></i><span class="text-gray-300">Everything in Pro</span></li>
+            <li class="flex items-center gap-2"><i class="fas fa-check text-[#FF6B35]"></i><span class="text-gray-300">4 PT sessions/month</span></li>
+            <li class="flex items-center gap-2"><i class="fas fa-check text-[#FF6B35]"></i><span class="text-gray-300">Spa & sauna access</span></li>
+            <li class="flex items-center gap-2"><i class="fas fa-check text-[#FF6B35]"></i><span class="text-gray-300">Guest passes included</span></li>
+          </ul>
+          <button onclick="openModal()" class="w-full py-3 rounded-full btn-outline-premium font-semibold">Get Started</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section (premium) -->
+  <section class="py-24 relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-r from-[#FF6B35] to-[#FFB347] opacity-90"></div>
+    <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
+    <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+      <h2 class="font-display text-5xl md:text-7xl mb-6 text-white">READY TO TRANSFORM?</h2>
+      <p class="text-xl text-white/90 mb-10 max-w-2xl mx-auto">Start your fitness journey today. Join thousands of members who have already transformed their lives with FitForge.</p>
+      <button onclick="openModal()" class="bg-white text-[#FF6B35] px-10 py-5 rounded-full font-semibold text-lg shadow-2xl hover:scale-105 transition"><i class="fas fa-gem mr-2"></i>Claim Your Free Trial</button>
+    </div>
+  </section>
+
+  <!-- Footer (premium) -->
+  <footer class="py-16 bg-[#0a0a0a] border-t border-gray-800">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid md:grid-cols-4 gap-12 mb-12">
+        <div>
+          <div class="flex items-center gap-2 mb-6">
+            <div class="w-10 h-10 rounded-lg bg-[#FF6B35] flex items-center justify-center">
+              <i class="fas fa-dumbbell text-white text-xl"></i>
+            </div>
+            <span class="font-display text-2xl text-white">FITFORGE</span>
+          </div>
+          <p class="text-sm text-gray-400 leading-relaxed">Transform your body, elevate your mind, and join a community of champions.</p>
+        </div>
+        <div>
+          <h4 class="font-semibold text-white mb-4">Quick Links</h4>
+          <ul class="space-y-2">
+            <li><a href="#about" class="text-gray-400 hover:text-[#FF6B35] transition">About Us</a></li>
+            <li><a href="#classes" class="text-gray-400 hover:text-[#FF6B35] transition">Classes</a></li>
+            <li><a href="#pricing" class="text-gray-400 hover:text-[#FF6B35] transition">Membership</a></li>
+            <li><a href="#schedule" class="text-gray-400 hover:text-[#FF6B35] transition">Schedule</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold text-white mb-4">Contact</h4>
+          <ul class="space-y-2 text-gray-400">
+            <li><i class="fas fa-map-pin mr-2 text-[#FF6B35]"></i>123 Fitness Street, NY</li>
+            <li><i class="fas fa-envelope mr-2 text-[#FF6B35]"></i>hello@fitforge.com</li>
+            <li><i class="fas fa-phone mr-2 text-[#FF6B35]"></i>(555) 123-4567</li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold text-white mb-4">Hours</h4>
+          <ul class="space-y-2 text-gray-400">
+            <li>Mon-Fri: 5AM - 11PM</li>
+            <li>Saturday: 6AM - 10PM</li>
+            <li>Sunday: 7AM - 9PM</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-8 border-t border-gray-800 flex flex-col md:flex-row items-center justify-between gap-4">
+        <p class="text-sm text-gray-400">© 2025 FitForge. All rights reserved.</p>
+        <div class="flex gap-4">
+          <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-[#FF6B35] hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-[#FF6B35] hover:text-white transition"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-[#FF6B35] hover:text-white transition"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // Mobile menu toggle
+    document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+    });
+
+    // Schedule tabs
+    const dayTabs = document.querySelectorAll('.day-tab');
+    dayTabs.forEach(tab => {
+      tab.addEventListener('click', function() {
+        // Remove active class from all tabs
+        dayTabs.forEach(t => {
+          t.classList.remove('active');
+          t.style.background = ''; // revert to default (glass)
+          t.style.color = '#a3a3a3';
+        });
+        // Add active class to clicked tab
+        this.classList.add('active');
+        this.style.background = '#FF6B35';
+        this.style.color = '#ffffff';
+        
+        // Hide all schedule days
+        document.querySelectorAll('.schedule-day').forEach(day => day.classList.add('hidden'));
+        // Show selected day
+        const day = this.getAttribute('data-day');
+        const selectedDay = document.getElementById(`schedule-${day}`);
+        if (selectedDay) selectedDay.classList.remove('hidden');
+      });
+    });
+
+    // Modal functions
+    function openModal() {
+      document.getElementById('bookingModal').classList.add('show');
+    }
+    window.closeModal = function() {
+      document.getElementById('bookingModal').classList.remove('show');
+    };
+    // Close modal when clicking outside content
+    document.getElementById('bookingModal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+
+    // Simple form submission (prevent default and show alert)
+    document.getElementById('bookingForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Thank you! Your booking request has been sent (demo).');
+      closeModal();
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+          // Close mobile menu if open
+          document.getElementById('mobile-menu').classList.add('hidden');
+        }
+      });
+    });
+  </script>
+
+  <!-- (Optional) SDK config stub – kept for compatibility -->
+  <script>
+    // Minimal config to avoid errors if SDK is missing
+    window.elementSdk = window.elementSdk || { init: () => {} };
+  </script>
+</body>
+</html>
